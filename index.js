@@ -1,6 +1,8 @@
+require('dotenv/config');
 const express = require('express');
 const app = express();
 const Youch = require('youch');
+const sentry = require('@sentry/node');
 
 const routes = require('./src/routes');
 
@@ -14,6 +16,10 @@ app.use(async (err, req, res, next) => {
   }
   return res.status(500).json({ error: 'Internal Server Error' });
 });
+
+if (process.env.NODE_ENV !== 'development') {
+  Sentry.init({ dsn: process.env.SENTRY_DSN });
+}
 
 app.listen(3001, () => {
   console.log('startado Seek Mailer');
